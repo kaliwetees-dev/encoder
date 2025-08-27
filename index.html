@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Message Decoder (Static)</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <title>Message Encoder</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <h2>🔐 Message Decoder</h2>
-        <textarea id="encoded" placeholder="Enter encoded text here..."></textarea>
-        <button id="decodeButton">Decode</button>
+  <div class="container">
+    <h2>📝 Message Encoder</h2>
+    <textarea id="inputText" placeholder="Enter text to encode...">Congratulations! You have succesâfully ecoded this sentence</textarea>
+    <button id="encodeButton">Encode</button>
 
-        <div class="result" id="result" style="display:none;">
-            <h3>Decoded Message:</h3>
-            <p id="decodedText"></p>
-        </div>
+    <div class="result" id="result" style="display:none;">
+      <h3>Encoded Message:</h3>
+      <p id="encodedText"></p>
     </div>
+  </div>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
