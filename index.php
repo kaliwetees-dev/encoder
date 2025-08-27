@@ -16,11 +16,14 @@
         </form>
 
         <?php
-        require_once 'encoder.php'; // Include the PHP script with the encoding logic
+        // This line includes the PHP script with the encoding logic.
+        require_once 'encoder.php'; 
 
         if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['text_input'])) {
             $text = $_POST['text_input'];
-            $final_text = encode_sentence($text); // Call the function from the separate script
+            
+            // This function call will use the logic from encoder.php.
+            $final_text = encode_sentence($text);
             
             echo '<h2>Encoded Sentence</h2>';
             echo '<div class="output">' . htmlspecialchars($final_text) . '</div>';
