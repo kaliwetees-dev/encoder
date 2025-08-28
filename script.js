@@ -1,75 +1,98 @@
-document.addEventListener('DOMContentLoaded', () => {
-  function encodeMessage(text) {
-    // Step 1: Split input text into words (including duplicates)
-    let words = text.split(/\s+/);
-    console.log("Original words:", words);
+// Utilities from the Python code logic, re-implemented in JS
 
-    // Step 2: Number of words (including duplicates)
-    let n = words.length;
-
-    // Step 3: Assign numbers starting from the last backward for every word
-    let assignedNumbers = [];
-    for (let i = 0; i < n; i++) {
-      assignedNumbers.push(n - i);
+function gcd(x, y) {
+    while (y !== 0) {
+        [x, y] = [y, x % y];
     }
+    return x;
+}
 
-    // Step 4: Convert assigned numbers to hex ASCII codes for each word
-    let modifiedWords = [];
-    for (let i = 0; i < n; i++) {
-      let num = assignedNumbers[i];
-      let hexVal = num.toString(16).toUpperCase().padStart(2, '0');
-      // Swap two hex digits and place second digit at word start, first at word end
-      let modifiedWord = hexVal[1] + words[i] + hexVal[0];
-      modifiedWords.push(modifiedWord);
-    }
-    console.log("Modified words BEFORE shuffle:", modifiedWords);
-
-    // Step 5: Simple deterministic shuffle function
-    function simpleShuffle(lst) {
-      let arr = [...lst];
-      let length = arr.length;
-      for (let i = length - 1; i > 0; i--) {
-        let j = (i * 7 + 3) % length;
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-    let shuffledWords = simpleShuffle(modifiedWords);
-    console.log("Shuffled words AFTER shuffle:", shuffledWords);
-
-    // Step 6: Shift all chars +5 within printable ASCII (32-126); else unchanged
-    function shiftChars(text) {
-      let shifted = '';
-      for (let ch of text) {
-        let asciiVal = ch.charCodeAt(0);
-        if (asciiVal >= 32 && asciiVal <= 126) {
-          let shiftedVal = asciiVal + 5;
-          if (shiftedVal > 126) {
-            shiftedVal = 32 + (shiftedVal - 127);
-          }
-          shifted += String.fromCharCode(shiftedVal);
-        } else {
-          shifted += ch;
+function findCoprime(n) {
+    let a = 2;
+    while (a < n) {
+        if (gcd(a, n) === 1) {
+            return a;
         }
-      }
-      return shifted;
+        a++;
     }
+    return 1; // fallback
+}
 
-    // Join shuffled words with space and shift characters
-    let joinedText = shuffledWords.join(' ');
-    console.log("Joined text BEFORE shift:", joinedText);
+function transformWord(word, hexval) {
+    let transformed = word;
+    let toggle = true; 
+    for (const digit of hexval) {
+        if (toggle) transformed = transformed + digit;
+        else transformed = digit + transformed;
+        toggle = !toggle;
+    }
+    return transformed;
+}
 
-    let shiftedText = shiftChars(joinedText);
-    console.log("Shifted text AFTER shift:", shiftedText);
+function simpleIndexShuffle(words) {
+    const n = words.length;
+    const a = findCoprime(n);
+    const b = 1;
+    if (a === 1) {
+        throw new Error(`No coprime found for n=${n}, can't shuffle deterministically.`);
+    }
+    const shuffled = Array(n).fill(null);
+    for (let i = 0; i < n; i++) {
+        const newIndex = (a * i + b) % n;
+        shuffled[newIndex] = words[i];
+    }
+    return shuffled;
+}
 
-    return shiftedText;
-  }
+function shiftChar(c, shift = 15, lower = 32, upper = 126) {
+    const asciiVal = c.charCodeAt(0);
+    if (asciiVal >= lower && asciiVal <= upper) {
+        let shifted = asciiVal + shift;
+        if (shifted > upper) {
+            shifted = lower + (shifted - upper - 1);
+        }
+        return String.fromCharCode(shifted);
+    } else {
+        return c;
+    }
+}
 
-  document.getElementById('encodeButton').addEventListener('click', () => {
-    let input = document.getElementById('inputText').value;
-    if (!input.trim()) return; // Ignore empty input
-    let encoded = encodeMessage(input);
-    document.getElementById('encodedText').textContent = encoded;
-    document.getElementById('result').style.display = 'block';
-  });
+function shiftString(s, shift = 15) {
+    let result = "";
+    for (const c of s) {
+        result += shiftChar(c, shift);
+    }
+    return result;
+}
+
+function processSentence(sentence) {
+    const words = sentence.split(" ");
+    const n = words.length;
+    const transformedWords = [];
+    for (let i = 0; i < n; i++) {
+        const num = n - i;
+        const hexval = num.toString(16).padStart(2, "0");
+        const transformed = transformWord(words[i], hexval);
+        transformedWords.push(transformed);
+    }
+    const jumbled = simpleIndexShuffle(transformedWords);
+    return jumbled;
+}
+
+// Event hookup
+
+document.getElementById("encodeButton").addEventListener("click", () => {
+    const input = document.getElementById("inputText").value.trim();
+    if (!input) {
+        alert("Please enter some text to encode.");
+        return;
+    }
+    try {
+        const jumbledWords = processSentence(input);
+        const joined = jumbledWords.join(" ");
+        const shifted = shiftString(joined, 15);
+        document.getElementById("outputText").value = shifted;
+    } catch (err) {
+        alert("Error: " + err.message);
+    }
 });
