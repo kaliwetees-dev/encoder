@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function encodeMessage(text) {
     // Step 1: Split input text into words (including duplicates)
     let words = text.split(/\s+/);
+    console.log("Original words:", words);
 
     // Step 2: Number of words (including duplicates)
     let n = words.length;
@@ -18,8 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
       let num = assignedNumbers[i];
       let hexVal = num.toString(16).toUpperCase().padStart(2, '0');
       // Swap two hex digits and place second digit at word start, first at word end
-      modifiedWords.push(hexVal[1] + words[i] + hexVal[0]);
+      let modifiedWord = hexVal[1] + words[i] + hexVal[0];
+      modifiedWords.push(modifiedWord);
     }
+    console.log("Modified words BEFORE shuffle:", modifiedWords);
 
     // Step 5: Simple deterministic shuffle function
     function simpleShuffle(lst) {
@@ -32,8 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return arr;
     }
     let shuffledWords = simpleShuffle(modifiedWords);
+    console.log("Shuffled words AFTER shuffle:", shuffledWords);
 
-    // Step 6: Shift all chars +15 within printable ASCII (32-126); else unchanged
+    // Step 6: Shift all chars +5 within printable ASCII (32-126); else unchanged
     function shiftChars(text) {
       let shifted = '';
       for (let ch of text) {
@@ -53,13 +57,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Join shuffled words with space and shift characters
     let joinedText = shuffledWords.join(' ');
-    return shiftChars(joinedText);
+    console.log("Joined text BEFORE shift:", joinedText);
+
+    let shiftedText = shiftChars(joinedText);
+    console.log("Shifted text AFTER shift:", shiftedText);
+
+    return shiftedText;
   }
 
   document.getElementById('encodeButton').addEventListener('click', () => {
     let input = document.getElementById('inputText').value;
-    if (!input.trim()) return;     // Ignore empty input
-
+    if (!input.trim()) return; // Ignore empty input
     let encoded = encodeMessage(input);
     document.getElementById('encodedText').textContent = encoded;
     document.getElementById('result').style.display = 'block';
