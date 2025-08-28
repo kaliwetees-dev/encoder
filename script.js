@@ -96,3 +96,34 @@ document.getElementById("encodeButton").addEventListener("click", () => {
         alert("Error: " + err.message);
     }
 });
+// ... existing code ...
+
+document.getElementById("encodeButton").addEventListener("click", () => {
+    const input = document.getElementById("inputText").value.trim();
+    if (!input) {
+        alert("Please enter some text to encode.");
+        return;
+    }
+    try {
+        const jumbledWords = processSentence(input);
+        const joined = jumbledWords.join(" ");
+        const shifted = shiftString(joined, 15);
+        document.getElementById("outputText").value = shifted;
+    } catch (err) {
+        alert("Error: " + err.message);
+    }
+});
+
+// Copy button functionality
+document.getElementById("copyButton").addEventListener("click", () => {
+    const outputText = document.getElementById("outputText");
+    if (!outputText.value) {
+        alert("No encoded text to copy!");
+        return;
+    }
+    navigator.clipboard.writeText(outputText.value).then(() => {
+        alert("Copied to clipboard!");
+    }).catch((err) => {
+        alert("Failed to copy: " + err);
+    });
+});
