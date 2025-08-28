@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Message Encoder</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Text Encoder</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h2>Message Encoder</h2>
-    <textarea id="inputText" placeholder="Enter text to encode..."></textarea>
-    <button id="encodeButton">Encode</button>
-
-    <div class="result" id="result" style="display:none;">
-      <h3>Encoded Message:</h3>
-      <p id="encodedText"></p>
+    <div class="container">
+        <h1>Text Encoder</h1>
+        <textarea id="inputText" placeholder="Enter text to encode..."></textarea>
+        <button id="encodeButton">Encode</button>
+        <h2>Encoded Output</h2>
+        <textarea id="outputText" readonly></textarea>
     </div>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
