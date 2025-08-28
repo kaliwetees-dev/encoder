@@ -54,7 +54,7 @@ function encodeMessage(text) {
     for (let ch of text) {
       let asciiVal = ch.charCodeAt(0);
       if (asciiVal >= 32 && asciiVal <= 126) {
-        let shiftedVal = asciiVal + 5;
+        let shiftedVal = asciiVal + 10;
         if (shiftedVal > 126) {
           shiftedVal = 32 + (shiftedVal - 127);
         }
