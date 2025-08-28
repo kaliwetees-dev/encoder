@@ -1,5 +1,3 @@
-// Utilities from the Python code logic, re-implemented in JS
-
 function gcd(x, y) {
     while (y !== 0) {
         [x, y] = [y, x % y];
@@ -8,6 +6,7 @@ function gcd(x, y) {
 }
 
 function findCoprime(n) {
+    if (n <= 2) return 1;  // fallback for small inputs
     let a = 2;
     while (a < n) {
         if (gcd(a, n) === 1) {
@@ -15,12 +14,12 @@ function findCoprime(n) {
         }
         a++;
     }
-    return 1; // fallback
+    return 1;
 }
 
 function transformWord(word, hexval) {
     let transformed = word;
-    let toggle = true; 
+    let toggle = true;
     for (const digit of hexval) {
         if (toggle) transformed = transformed + digit;
         else transformed = digit + transformed;
@@ -34,7 +33,8 @@ function simpleIndexShuffle(words) {
     const a = findCoprime(n);
     const b = 1;
     if (a === 1) {
-        throw new Error(`No coprime found for n=${n}, can't shuffle deterministically.`);
+        // no valid shuffle possible, return original array
+        return words.slice();
     }
     const shuffled = Array(n).fill(null);
     for (let i = 0; i < n; i++) {
@@ -79,25 +79,7 @@ function processSentence(sentence) {
     return jumbled;
 }
 
-// Event hookup
-
-document.getElementById("encodeButton").addEventListener("click", () => {
-    const input = document.getElementById("inputText").value.trim();
-    if (!input) {
-        alert("Please enter some text to encode.");
-        return;
-    }
-    try {
-        const jumbledWords = processSentence(input);
-        const joined = jumbledWords.join(" ");
-        const shifted = shiftString(joined, 15);
-        document.getElementById("outputText").value = shifted;
-    } catch (err) {
-        alert("Error: " + err.message);
-    }
-});
-// ... existing code ...
-
+// Encode button event handler
 document.getElementById("encodeButton").addEventListener("click", () => {
     const input = document.getElementById("inputText").value.trim();
     if (!input) {
@@ -114,7 +96,7 @@ document.getElementById("encodeButton").addEventListener("click", () => {
     }
 });
 
-// Copy button functionality
+// Copy button event handler
 document.getElementById("copyButton").addEventListener("click", () => {
     const outputText = document.getElementById("outputText");
     if (!outputText.value) {
